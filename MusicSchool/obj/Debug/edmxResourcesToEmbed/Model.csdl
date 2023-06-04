@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbMusicSchoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Class">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TeacherId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Teacher" Relationship="Self.FK_Classes_Teachers" FromRole="Classes" ToRole="Teachers" />
+    <NavigationProperty Name="Groups" Relationship="Self.ClassesInGroup" FromRole="Classes" ToRole="Group" />
+  </EntityType>
+  <EntityType Name="Group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Classes" Relationship="Self.ClassesInGroup" FromRole="Group" ToRole="Classes" />
+    <NavigationProperty Name="Students" Relationship="Self.StudentsInGroup" FromRole="Group" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StudentId" Type="Int32" Nullable="false" />
+    <Property Name="Summ" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PaidFor" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Payments_Students" FromRole="Payments" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Students" FromRole="Students" ToRole="Payments" />
+    <NavigationProperty Name="Groups" Relationship="Self.StudentsInGroup" FromRole="Students" ToRole="Group" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Teacher">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Post" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Classes" Relationship="Self.FK_Classes_Teachers" FromRole="Teachers" ToRole="Classes" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Password" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Login" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Classes_Teachers">
+    <End Role="Teachers" Type="Self.Teacher" Multiplicity="1" />
+    <End Role="Classes" Type="Self.Class" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teachers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Classes">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ClassesInGroup">
+    <End Role="Classes" Type="Self.Class" Multiplicity="*" />
+    <End Role="Group" Type="Self.Group" Multiplicity="*" />
+  </Association>
+  <Association Name="StudentsInGroup">
+    <End Role="Group" Type="Self.Group" Multiplicity="*" />
+    <End Role="Students" Type="Self.Student" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="dbMusicSchoolEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Classes" EntityType="Self.Class" />
+    <EntitySet Name="Groups" EntityType="Self.Group" />
+    <EntitySet Name="Payments" EntityType="Self.Payment" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="Teachers" EntityType="Self.Teacher" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Classes_Teachers" Association="Self.FK_Classes_Teachers">
+      <End Role="Teachers" EntitySet="Teachers" />
+      <End Role="Classes" EntitySet="Classes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_Students" Association="Self.FK_Payments_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="ClassesInGroup" Association="Self.ClassesInGroup">
+      <End Role="Classes" EntitySet="Classes" />
+      <End Role="Group" EntitySet="Groups" />
+    </AssociationSet>
+    <AssociationSet Name="StudentsInGroup" Association="Self.StudentsInGroup">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="Students" EntitySet="Students" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

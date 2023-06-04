@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище dbMusicSchoolModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Classes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="TeacherId" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "C:\USERS\LEONT\DESKTOP\КУРСОВЫЕ\КУРСАЧ ЗЯМКИН\MUSICSCHOOL\MUSICSCHOOL\DBMUSICSCHOOL.MDF.dbo.ClassesInGroup" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="ClassesInGroup">
+    <Key>
+      <PropertyRef Name="GroupId" />
+      <PropertyRef Name="ClassId" />
+    </Key>
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="ClassId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Payments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StudentId" Type="int" Nullable="false" />
+    <Property Name="Summ" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="PaidFor" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Students">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "C:\USERS\LEONT\DESKTOP\КУРСОВЫЕ\КУРСАЧ ЗЯМКИН\MUSICSCHOOL\MUSICSCHOOL\DBMUSICSCHOOL.MDF.dbo.StudentsInGroup" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="StudentsInGroup">
+    <Key>
+      <PropertyRef Name="StudentId" />
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="StudentId" Type="int" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Teachers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Post" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="15" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="25" Nullable="false" />
+    <Property Name="Login" Type="nvarchar" MaxLength="15" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Classes_Teachers">
+    <End Role="Teachers" Type="Self.Teachers" Multiplicity="1" />
+    <End Role="Classes" Type="Self.Classes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teachers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Classes">
+        <PropertyRef Name="TeacherId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ClassesInGroup_Classes">
+    <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
+    <End Role="ClassesInGroup" Type="Self.ClassesInGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Classes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ClassesInGroup">
+        <PropertyRef Name="ClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ClassesInGroup_Group">
+    <End Role="Group" Type="Self.Group" Multiplicity="1" />
+    <End Role="ClassesInGroup" Type="Self.ClassesInGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ClassesInGroup">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentsInGroup_Group">
+    <End Role="Group" Type="Self.Group" Multiplicity="1" />
+    <End Role="StudentsInGroup" Type="Self.StudentsInGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentsInGroup">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentsInGroup_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="StudentsInGroup" Type="Self.StudentsInGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentsInGroup">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище dbMusicSchoolModelContainer">
+    <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Teachers" EntityType="Self.Teachers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ClassesInGroup" EntityType="Self.ClassesInGroup" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ClassesInGroup].[GroupId] AS [GroupId], 
+    [ClassesInGroup].[ClassId] AS [ClassId]
+    FROM [dbo].[ClassesInGroup] AS [ClassesInGroup]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="StudentsInGroup" EntityType="Self.StudentsInGroup" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [StudentsInGroup].[StudentId] AS [StudentId], 
+    [StudentsInGroup].[GroupId] AS [GroupId]
+    FROM [dbo].[StudentsInGroup] AS [StudentsInGroup]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Classes_Teachers" Association="Self.FK_Classes_Teachers">
+      <End Role="Teachers" EntitySet="Teachers" />
+      <End Role="Classes" EntitySet="Classes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ClassesInGroup_Classes" Association="Self.FK_ClassesInGroup_Classes">
+      <End Role="Classes" EntitySet="Classes" />
+      <End Role="ClassesInGroup" EntitySet="ClassesInGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ClassesInGroup_Group" Association="Self.FK_ClassesInGroup_Group">
+      <End Role="Group" EntitySet="Group" />
+      <End Role="ClassesInGroup" EntitySet="ClassesInGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_Students" Association="Self.FK_Payments_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentsInGroup_Group" Association="Self.FK_StudentsInGroup_Group">
+      <End Role="Group" EntitySet="Group" />
+      <End Role="StudentsInGroup" EntitySet="StudentsInGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentsInGroup_Students" Association="Self.FK_StudentsInGroup_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="StudentsInGroup" EntitySet="StudentsInGroup" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
